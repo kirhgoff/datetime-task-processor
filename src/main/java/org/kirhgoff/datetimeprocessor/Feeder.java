@@ -20,6 +20,7 @@ public class Feeder {
   }
 
   public void generateTasks(int count) {
+    //TODO extract as generator
     Random random = new Random();
     tasks = new Stack<>();
     LocalDateTime now = LocalDateTime.now();
@@ -37,7 +38,7 @@ public class Feeder {
     }
   }
 
-  public void start() throws InterruptedException {
+  public void run() throws InterruptedException {
     final CountDownLatch latch = new CountDownLatch(1);
     final Timer timer = new Timer();
     timer.schedule(new TimerTask() {

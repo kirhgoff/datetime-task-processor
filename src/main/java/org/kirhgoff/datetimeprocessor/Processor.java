@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.concurrent.Callable;
 
 public interface Processor<T> {
-  void start();
+  void start(int poolSize);
   void process(Pair<LocalDateTime, Callable<T>> task);
-  boolean isBusy();
+  boolean isBusy() throws InterruptedException;
   void stop();
 }
