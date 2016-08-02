@@ -17,6 +17,7 @@ public class Main {
     System.out.println("Starting feeder...");
     Feeder<String> stringFeeder = new Feeder<>(processor, taskIncomingDelay);
     stringFeeder.generateTasks(tasksCount);
+    //TODO move inside
     CountDownLatch latch = stringFeeder.start();
 
     System.out.println("Waiting for simulation end...");

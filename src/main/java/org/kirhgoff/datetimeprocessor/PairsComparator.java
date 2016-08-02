@@ -9,7 +9,7 @@ public class PairsComparator<T> implements Comparator<Pair<LocalDateTime, T>> {
 
   @Override
   public int compare(Pair<LocalDateTime, T> o1, Pair<LocalDateTime, T> o2) {
-    //TODO implement me with null checks
+    //TODO implement me with null checks and test
     return 0;
   }
 }
