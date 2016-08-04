@@ -12,7 +12,8 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 class FakeTasksGenerator {
-  private Random random = new Random();
+  private static final double half = 0.5;
+  private final Random random = new Random();
 
   FakeTasksGenerator() {}
 
@@ -28,10 +29,10 @@ class FakeTasksGenerator {
 
     LocalDateTime now = LocalDateTime.now();
     for (int i = 0; i < count; i ++) {
-      long timeShift = Math.round(periodMillis * (0.5 - random.nextDouble()));
+      long timeShift = Math.round(periodMillis * (random.nextDouble() - half));
       LocalDateTime scheduleTime = now.plus(timeShift, ChronoUnit.MILLIS);
 
-      long sleepTime = Math.round(periodMillis * (0.5 - random.nextDouble()));
+      long sleepTime = Math.round(periodMillis * (random.nextDouble() - half));
       String string = UUID.randomUUID().toString();
       Callable<String> callable = new SleepingCallable<>(sleepTime, string);
 

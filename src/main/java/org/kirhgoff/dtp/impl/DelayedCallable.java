@@ -47,4 +47,9 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
   public T call() throws Exception {
     return delegate.call();
   }
+
+  @Override
+  public String toString() {
+    return "Job: to run in: " + getDelay(MILLIS) + ", " + delegate;
+  }
 }

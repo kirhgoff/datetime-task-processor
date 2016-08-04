@@ -3,6 +3,8 @@ package org.kirhgoff.dtp.impl;
 import org.kirhgoff.dtp.api.Processor;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.*;
 
 public class ProcessorImpl<T> implements Processor<T> {
@@ -22,27 +24,33 @@ public class ProcessorImpl<T> implements Processor<T> {
    * Not thread safe
    */
   public void start() {
-    while (!Thread.currentThread().isInterrupted()) {
-      DelayedCallable<T> job = jobs.poll();
+    new Thread(this::run).start();
+  }
 
-      try {
-        semaphore.acquire();
+  private void run() {
+    try {
+      while (!Thread.currentThread().isInterrupted()) {
+        System.out.println("Processor is looking for job:");
+        DelayedCallable<T> job = jobs.take();
+        long delay = job.getDelay(MILLIS);
+        System.out.println("Processor scheduled job: " + job);
         executor.schedule(
             new SemaphoreAwareCallable<>(job, semaphore),
-            job.getDelay(MILLIS), MILLIS
+            delay, MILLIS
         );
-      } catch (InterruptedException e) {
-        //TODO check its ok to just return, looks good
-        System.out.println("Processor was interrupted.");
-        return;
       }
+    } catch (InterruptedException e) {
+      //TODO check its ok to just return, looks good
+      System.out.println("Processor was interrupted.");
     }
   }
 
   @Override
   public void add(LocalDateTime time, Callable<T> task) {
     jobs.add(new DelayedCallable<>(time, task));
-    System.out.println("Added: time=" + time + ", task=" + task);
+    long timeMilli = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    System.out.println("Added: time=" + (timeMilli - System.currentTimeMillis())
+        + ", task=" + task);
   }
 
   @Override
@@ -70,6 +78,9 @@ public class ProcessorImpl<T> implements Processor<T> {
 
     @Override
     public R call() throws Exception {
+      System.out.println("Processor starting a job, acquiring monitor for "
+          + callable);
+      semaphore.acquire();
       R result = callable.call();
       //TODO possible unsafeness
       semaphore.release();
