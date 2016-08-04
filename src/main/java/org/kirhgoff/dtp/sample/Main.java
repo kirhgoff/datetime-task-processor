@@ -1,9 +1,18 @@
-package org.kirhgoff.datetimeprocessor;
+package org.kirhgoff.dtp.sample;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.kirhgoff.dtp.impl.ProcessorImpl;
+import org.kirhgoff.dtp.api.Processor;
+
+import java.time.LocalDateTime;
+import java.util.Queue;
+import java.util.concurrent.Callable;
 
 public class Main {
   public static void main(String[] args) throws InterruptedException {
+
     //Feeder properties
-    int taskIncomingDelay = 100;
+    long fakeFeedPeriod = 100;
     int tasksCount = 10;
 
     //Processor properties
@@ -15,15 +24,14 @@ public class Main {
     System.out.println("Starting simulation...");
     System.out.println("======================");
     System.out.println("Starting processor...");
-    Processor<String> processor = new ProcessorImpl<>();
-    processor.start(resourcesSize);
+    Processor<String> processor = new ProcessorImpl<>(resourcesSize);
+    processor.start();
 
     System.out.println("Starting feeder...");
-    //TODO make generic
-    Feeder stringFeeder = new Feeder(processor, taskIncomingDelay);
-    //TODO join methods and extract Generator
-    stringFeeder.generateTasks(tasksCount);
-    stringFeeder.run();
+    Feeder stringFeeder = new Feeder(fakeFeedPeriod);
+    stringFeeder.feed(processor,
+        new FakeTasksGenerator().newTasks(tasksCount, fakeFeedPeriod)
+    );
 
     System.out.println("Jobs generated, waiting for simulation to end...");
     //TODO make sure processor is busy until task is finished

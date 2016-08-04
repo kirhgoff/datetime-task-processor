@@ -31,7 +31,7 @@
               </descriptors>
               <archive>
                   <manifest>
-                      <mainClass>org.kirhgoff.datetimeprocessor.Main</mainClass>
+                      <mainClass>org.kirhgoff.dtp.sample.Main</mainClass>
                   </manifest>
               </archive>
           </configuration>
