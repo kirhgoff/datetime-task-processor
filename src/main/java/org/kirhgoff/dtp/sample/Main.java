@@ -1,30 +1,26 @@
 package org.kirhgoff.dtp.sample;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.kirhgoff.dtp.impl.ProcessorImpl;
 import org.kirhgoff.dtp.api.Processor;
-
-import java.time.LocalDateTime;
-import java.util.Queue;
-import java.util.concurrent.Callable;
+import org.kirhgoff.dtp.impl.ProcessorImpl;
 
 public class Main {
   public static void main(String[] args) throws InterruptedException {
 
     //Feeder properties
     long fakeFeedPeriod = 100;
-    int tasksCount = 3;
+    int tasksCount = 10;
 
     //Processor properties
     int resourcesSize = 4;
+    int precisionMillis = 100;
 
     //Main program properties
-    int waitBeforeQuit = 1000;
+    int waitBeforeQuit = 500;
 
     System.out.println("Starting simulation...");
     System.out.println("======================");
     System.out.println("Starting processor...");
-    Processor<String> processor = new ProcessorImpl<>(resourcesSize);
+    Processor<String> processor = new ProcessorImpl<>(resourcesSize, precisionMillis);
     processor.start();
 
     Thread.sleep(1000); //TODO just to check

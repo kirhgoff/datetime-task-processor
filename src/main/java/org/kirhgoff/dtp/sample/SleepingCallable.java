@@ -13,11 +13,11 @@ public class SleepingCallable<T> implements Callable<T>{
 
   @Override
   public T call() throws Exception {
-    System.out.println("Called: " + toString());
+    System.out.println(">>>> Called: " + toString());
     long start = System.currentTimeMillis();
-    Thread.sleep(delay);
+    Thread.sleep(delay > 0 ? delay : 0);
     System.out.println(
-      "Finished, overslept for "
+      ">>>> Finished, overslept for "
         + (System.currentTimeMillis() - start - delay)
         + "ms " + toString()
     );

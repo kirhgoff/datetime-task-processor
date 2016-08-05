@@ -4,26 +4,34 @@ import org.kirhgoff.dtp.api.Processor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.*;
 
 public class ProcessorImpl<T> implements Processor<T> {
   private static final TimeUnit MILLIS = TimeUnit.MILLISECONDS;
   private static final NowProvider NOW = NowProvider.system();
-  private final int poolSize;
+
   private final ScheduledExecutorService executor;
   private final DelayQueue<DelayedCallable<T>> jobs = new DelayQueue<>();
   private final Semaphore semaphore;
+  private Thread pollingThread;
 
-  public ProcessorImpl(int poolSize) {
+  private final int poolSize;
+  private long precision;
+
+  public ProcessorImpl(int poolSize, long precision) {
     this.poolSize = poolSize;
     this.executor = Executors.newScheduledThreadPool(poolSize);
     this.semaphore = new Semaphore(poolSize);
+    this.precision = precision;
   }
   /**
    * Not thread safe
    */
   public void start() {
-    new Thread(this::run).start();
+    pollingThread = new Thread(this::run);
+    pollingThread.start();
   }
 
   private void run() {
@@ -39,7 +47,6 @@ public class ProcessorImpl<T> implements Processor<T> {
         );
       }
     } catch (InterruptedException e) {
-      //TODO check its ok to just return, looks good
       System.out.println("Processor: was interrupted.");
     }
   }
@@ -55,15 +62,12 @@ public class ProcessorImpl<T> implements Processor<T> {
   @Override
   public boolean isBusy() throws InterruptedException {
     //TODO is it be safe?
-    //TODO get executor pool size
-    //TODO will it return true if some future call is in?
-    return !jobs.isEmpty() || semaphore.availablePermits() < poolSize;
+    return !jobs.isEmpty() && semaphore.availablePermits() < poolSize;
   }
 
   public void stop() {
     executor.shutdownNow();
-    //TODO wait till it ends
-    //executor.awaitTermination(1000, TimeUnit.MILLISECONDS);
+    pollingThread.interrupt();
   }
 
   private static class SemaphoreAwareCallable<R> implements Callable<R> {

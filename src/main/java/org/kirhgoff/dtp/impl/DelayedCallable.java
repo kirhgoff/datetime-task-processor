@@ -6,8 +6,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-//TODO write test
-
 /**
  * Delayed implementation
  * @param <T> - return value of Callable
@@ -36,6 +34,7 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
     long millisLeft = ChronoUnit.MILLIS.between(nowProvider.get(), dateTime);
     long result = unit.convert(millisLeft, MILLIS);
     //System.out.println("DelayedCallable.getDelay: millis left=" + millisLeft + ", result=" + result + ", unit=" + unit.name());
+    //TODO give zero if overdue
     return result;
   }
 
@@ -59,5 +58,28 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
   @Override
   public String toString() {
     return "DelayedCallable[to run in: " + getDelay(MILLIS) + ", " + delegate + "]";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    DelayedCallable<?> that = (DelayedCallable<?>) o;
+
+    if (dateTime != null ? !dateTime.equals(that.dateTime) : that.dateTime != null)
+      return false;
+    if (delegate != null ? !delegate.equals(that.delegate) : that.delegate != null)
+      return false;
+    return nowProvider  == that.nowProvider;
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = dateTime != null ? dateTime.hashCode() : 0;
+    result = 31 * result + (delegate != null ? delegate.hashCode() : 0);
+    result = 31 * result + (nowProvider != null ? nowProvider.hashCode() : 0);
+    return result;
   }
 }

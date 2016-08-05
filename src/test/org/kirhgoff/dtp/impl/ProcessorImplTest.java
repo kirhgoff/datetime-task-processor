@@ -10,11 +10,12 @@ import java.util.concurrent.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProcessorImplTest {
+  //TODO create setUp
 
   @Test
   public void testOneTask() throws InterruptedException {
     CountDownLatch latch = new CountDownLatch(1);
-    Processor<String> processor = new ProcessorImpl<>(1);
+    Processor<String> processor = new ProcessorImpl<>(1, 10);
     processor.start();
     processor.add(LocalDateTime.now().plus(100, ChronoUnit.MILLIS),
         () -> {
@@ -28,7 +29,7 @@ public class ProcessorImplTest {
   @Test
   public void testTwoTasks() throws InterruptedException {
     CountDownLatch latch = new CountDownLatch(2);
-    Processor<String> processor = new ProcessorImpl<>(1);
+    Processor<String> processor = new ProcessorImpl<>(1, 10);
     processor.start();
 
     LocalDateTime now = LocalDateTime.now();
@@ -45,7 +46,7 @@ public class ProcessorImplTest {
   @Test
   public void testTwoTasksOrder() throws InterruptedException {
     CountDownLatch latch = new CountDownLatch(2);
-    Processor<Boolean> processor = new ProcessorImpl<>(1);
+    Processor<Boolean> processor = new ProcessorImpl<>(1, 10);
     processor.start();
 
     ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<>();
