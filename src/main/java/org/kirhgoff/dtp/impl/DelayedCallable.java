@@ -32,8 +32,7 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
   @Override
   public long getDelay(TimeUnit unit) {
     long millisLeft = ChronoUnit.MILLIS.between(nowProvider.get(), dateTime);
-    //TODO give zero if overdue?
-    return unit.convert(millisLeft, MILLIS);
+    return millisLeft > 0 ? unit.convert(millisLeft, MILLIS) : 0;
   }
 
   @Override

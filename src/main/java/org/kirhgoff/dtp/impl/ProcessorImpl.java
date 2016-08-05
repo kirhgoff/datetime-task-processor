@@ -59,7 +59,7 @@ public class ProcessorImpl<T> implements Processor<T> {
 
   @Override
   public boolean isBusy() throws InterruptedException {
-    //TODO is it be safe?
+    //TODO is it safe?
     return !jobs.isEmpty() && semaphore.availablePermits() < poolSize;
   }
 
@@ -83,7 +83,6 @@ public class ProcessorImpl<T> implements Processor<T> {
           + callable);
       semaphore.acquire();
       R result = callable.call();
-      //TODO possible unsafeness
       semaphore.release();
       System.out.println("Processor: releasing semaphore: " + semaphore.availablePermits());
       return result;
