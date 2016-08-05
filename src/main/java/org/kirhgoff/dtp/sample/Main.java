@@ -13,7 +13,7 @@ public class Main {
 
     //Feeder properties
     long fakeFeedPeriod = 100;
-    int tasksCount = 10;
+    int tasksCount = 3;
 
     //Processor properties
     int resourcesSize = 4;

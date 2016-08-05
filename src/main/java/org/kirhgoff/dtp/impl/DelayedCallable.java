@@ -31,8 +31,10 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
    */
   @Override
   public long getDelay(TimeUnit unit) {
-    long millisLeft = ChronoUnit.MILLIS.between(dateTime, LocalDateTime.now());
-    return unit.convert(millisLeft, MILLIS);
+    long millisLeft = ChronoUnit.MILLIS.between(LocalDateTime.now(), dateTime);
+    long convert = unit.convert(millisLeft, MILLIS);
+    //System.out.println("Job: millis left=" + millisLeft + ", converted=" + convert + ", unit=" + unit);
+    return convert;
   }
 
   @Override
