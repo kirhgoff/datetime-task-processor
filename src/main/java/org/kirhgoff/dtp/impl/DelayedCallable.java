@@ -47,8 +47,8 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
   public int compareTo(Delayed that) {
     long thisDelay = this.getDelay(MILLIS);
     long thatDelay = that.getDelay(MILLIS);
-    //TODO how to keep initial order of addition?
-    return thisDelay > thatDelay ? -1 : 1;
+    if (thisDelay == thatDelay) return 0;
+    else return thisDelay < thatDelay ? -1 : 1;
   }
 
   @Override
