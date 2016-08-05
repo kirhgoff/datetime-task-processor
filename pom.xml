@@ -62,5 +62,11 @@
 			<version>3.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.5.2</version>
+		</dependency>
+
 	</dependencies>
 </project>

@@ -4,12 +4,11 @@ import org.kirhgoff.dtp.api.Processor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.*;
 
 public class ProcessorImpl<T> implements Processor<T> {
   private static final TimeUnit MILLIS = TimeUnit.MILLISECONDS;
-
+  private static final NowProvider NOW = NowProvider.system();
   private final int poolSize;
   private final ScheduledExecutorService executor;
   private final DelayQueue<DelayedCallable<T>> jobs = new DelayQueue<>();
@@ -47,7 +46,7 @@ public class ProcessorImpl<T> implements Processor<T> {
 
   @Override
   public void add(LocalDateTime time, Callable<T> task) {
-    jobs.add(new DelayedCallable<>(time, task));
+    jobs.add(new DelayedCallable<>(time, task, NOW));
     long timeMilli = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     System.out.println("Processor: added job, to start=" + (timeMilli - System.currentTimeMillis())
         + ", task=" + task);

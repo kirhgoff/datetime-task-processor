@@ -16,10 +16,12 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
   private static final TimeUnit MILLIS = TimeUnit.MILLISECONDS;
   private final LocalDateTime dateTime;
   private final Callable<T> delegate;
+  private final NowProvider nowProvider;
 
-  public DelayedCallable(LocalDateTime dateTime, Callable<T> delegate) {
+  public DelayedCallable(LocalDateTime dateTime, Callable<T> delegate, NowProvider nowProvider) {
     this.dateTime = dateTime;
     this.delegate = delegate;
+    this.nowProvider = nowProvider;
   }
 
   /**
@@ -31,10 +33,14 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
    */
   @Override
   public long getDelay(TimeUnit unit) {
-    long millisLeft = ChronoUnit.MILLIS.between(LocalDateTime.now(), dateTime);
+    long millisLeft = ChronoUnit.MILLIS.between(nowProvider.get(), dateTime);
     long result = unit.convert(millisLeft, MILLIS);
     //System.out.println("DelayedCallable.getDelay: millis left=" + millisLeft + ", result=" + result + ", unit=" + unit.name());
     return result;
+  }
+
+  private LocalDateTime getNow() {
+    return LocalDateTime.now();
   }
 
   @Override
