@@ -3,10 +3,13 @@ package org.kirhgoff.dtp.impl;
 import java.time.LocalDateTime;
 import java.time.temporal.Temporal;
 
-public interface NowProvider {
+/**
+ * Testing purposes only, unfortunately
+ */
+interface NowProvider {
   Temporal get();
 
   static NowProvider system() {
-    return () -> LocalDateTime.now();
+    return LocalDateTime::now;
   }
 }

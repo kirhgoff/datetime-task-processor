@@ -3,11 +3,11 @@ package org.kirhgoff.dtp.sample;
 import java.util.concurrent.Callable;
 
 public class SleepingCallable<T> implements Callable<T>{
-  private final long delay;
+  private final long sleepTime;
   private final T string;
 
-  public SleepingCallable(long delay, T string) {
-    this.delay = delay;
+  public SleepingCallable(long sleepTime, T string) {
+    this.sleepTime = sleepTime;
     this.string = string;
   }
 
@@ -15,10 +15,10 @@ public class SleepingCallable<T> implements Callable<T>{
   public T call() throws Exception {
     System.out.println(">>>> Called: " + toString());
     long start = System.currentTimeMillis();
-    Thread.sleep(delay > 0 ? delay : 0);
+    Thread.sleep(sleepTime > 0 ? sleepTime : 0);
     System.out.println(
       ">>>> Finished, overslept for "
-        + (System.currentTimeMillis() - start - delay)
+        + (System.currentTimeMillis() - start - sleepTime)
         + "ms " + toString()
     );
     return string;
@@ -26,6 +26,6 @@ public class SleepingCallable<T> implements Callable<T>{
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "[ delay=" + delay + ", string=" + string + "]";
+    return getClass().getSimpleName() + "[ sleepTime=" + sleepTime + ", string=" + string + "]";
   }
 }

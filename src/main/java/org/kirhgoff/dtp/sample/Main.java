@@ -12,19 +12,16 @@ public class Main {
 
     //Processor properties
     int resourcesSize = 4;
-    int precisionMillis = 100;
 
     //Main program properties
-    int waitBeforeQuit = 500;
+    int waitBeforeQuit = 200;
 
     System.out.println("Starting simulation...");
     System.out.println("======================");
     System.out.println("Starting processor...");
-    Processor<String> processor = new ProcessorImpl<>(resourcesSize, precisionMillis);
+    Processor<String> processor = new ProcessorImpl<>(resourcesSize);
     processor.start();
 
-    Thread.sleep(1000); //TODO just to check
-    
     System.out.println("Starting feeder...");
     Feeder stringFeeder = new Feeder(fakeFeedPeriod);
     stringFeeder.feed(processor,
@@ -32,7 +29,6 @@ public class Main {
     );
 
     System.out.println("Jobs generated, waiting for simulation to end...");
-    //TODO make sure processor is busy until task is finished
     while (processor.isBusy()) {
       Thread.sleep(waitBeforeQuit);
     }

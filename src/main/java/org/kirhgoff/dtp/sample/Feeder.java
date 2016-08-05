@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
  * Uses generated tasks
  */
 class Feeder {
-  private long delay;
+  private final long delay;
 
   Feeder(long delay) {
     this.delay = delay;
@@ -29,12 +29,12 @@ class Feeder {
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        //TODO do we need checks for interrupted here?
         if (!tasks.isEmpty()) {
           Pair<LocalDateTime, Callable<String>> nextOne = tasks.poll();
 
           LocalDateTime time = nextOne.getLeft();
           Callable<String> callable = nextOne.getRight();
+
           processor.add(time, callable);
         } else {
           timer.cancel();

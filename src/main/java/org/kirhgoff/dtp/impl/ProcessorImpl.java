@@ -18,13 +18,11 @@ public class ProcessorImpl<T> implements Processor<T> {
   private Thread pollingThread;
 
   private final int poolSize;
-  private long precision;
 
-  public ProcessorImpl(int poolSize, long precision) {
+  public ProcessorImpl(int poolSize) {
     this.poolSize = poolSize;
     this.executor = Executors.newScheduledThreadPool(poolSize);
     this.semaphore = new Semaphore(poolSize);
-    this.precision = precision;
   }
   /**
    * Not thread safe

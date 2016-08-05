@@ -18,7 +18,8 @@ class FakeTasksGenerator {
   FakeTasksGenerator() {}
 
   /**
-   * Generates simple callables which wait for random time and need to start in some period of time from current moment
+   * Generates simple callables with random start time in periodMillis
+   * that will sleep for some time around periodMillis
    * @param count - amount of pairs to generate
    * @param periodMillis - constant to be used in randomization,
    * initial period of events
@@ -29,17 +30,26 @@ class FakeTasksGenerator {
 
     LocalDateTime now = LocalDateTime.now();
     for (int i = 0; i < count; i ++) {
-      long timeShift = Math.round(periodMillis * (random.nextDouble() - half));
-      LocalDateTime scheduleTime = now.plus(timeShift, ChronoUnit.MILLIS);
-
-      long sleepTime = Math.round(periodMillis * (random.nextDouble() - half));
       String string = UUID.randomUUID().toString();
-      Callable<String> callable = new SleepingCallable<>(sleepTime, string);
+      LocalDateTime scheduleTime = plus(now, periodMillis);
+      long sleepTime = randomMillis(periodMillis);
 
-      tasks.add(new ImmutablePair<>(scheduleTime, callable));
+      tasks.add(
+        new ImmutablePair<>(scheduleTime,
+          new SleepingCallable<>(sleepTime, string))
+      );
+
       now = scheduleTime;
     }
     return tasks;
+  }
+
+  private LocalDateTime plus(LocalDateTime now, long periodMillis) {
+    return now.plus(randomMillis(periodMillis), ChronoUnit.MILLIS);
+  }
+
+  private long randomMillis(long periodMillis) {
+    return Math.round(periodMillis * (random.nextDouble() - half));
   }
 
 
