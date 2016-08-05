@@ -27,6 +27,8 @@ public class Main {
     Processor<String> processor = new ProcessorImpl<>(resourcesSize);
     processor.start();
 
+    Thread.sleep(1000); //TODO just to check
+    
     System.out.println("Starting feeder...");
     Feeder stringFeeder = new Feeder(fakeFeedPeriod);
     stringFeeder.feed(processor,

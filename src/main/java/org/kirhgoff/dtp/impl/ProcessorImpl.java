@@ -30,10 +30,10 @@ public class ProcessorImpl<T> implements Processor<T> {
   private void run() {
     try {
       while (!Thread.currentThread().isInterrupted()) {
-        System.out.println("Processor is looking for job:");
+        System.out.println("Processor: looking for job");
         DelayedCallable<T> job = jobs.take();
         long delay = job.getDelay(MILLIS);
-        System.out.println("Processor scheduled job: " + job);
+        System.out.println("Processor: scheduled job " + job);
         executor.schedule(
             new SemaphoreAwareCallable<>(job, semaphore),
             delay, MILLIS
@@ -41,7 +41,7 @@ public class ProcessorImpl<T> implements Processor<T> {
       }
     } catch (InterruptedException e) {
       //TODO check its ok to just return, looks good
-      System.out.println("Processor was interrupted.");
+      System.out.println("Processor: was interrupted.");
     }
   }
 
@@ -49,7 +49,7 @@ public class ProcessorImpl<T> implements Processor<T> {
   public void add(LocalDateTime time, Callable<T> task) {
     jobs.add(new DelayedCallable<>(time, task));
     long timeMilli = time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-    System.out.println("Added: time=" + (timeMilli - System.currentTimeMillis())
+    System.out.println("Processor: added job, to start=" + (timeMilli - System.currentTimeMillis())
         + ", task=" + task);
   }
 
@@ -78,12 +78,13 @@ public class ProcessorImpl<T> implements Processor<T> {
 
     @Override
     public R call() throws Exception {
-      System.out.println("Processor starting a job, acquiring monitor for "
+      System.out.println("Processor: starting a job, acquiring monitor for "
           + callable);
       semaphore.acquire();
       R result = callable.call();
       //TODO possible unsafeness
       semaphore.release();
+      System.out.println("Processor: releasing semaphore: " + semaphore.availablePermits());
       return result;
     }
   }

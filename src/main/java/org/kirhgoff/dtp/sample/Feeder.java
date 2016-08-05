@@ -41,7 +41,7 @@ class Feeder {
           latch.countDown();
         }
       }
-    }, delay, delay);
+    }, 0, delay);
     latch.await();
   }
 
