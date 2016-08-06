@@ -2,11 +2,11 @@ package org.kirhgoff.dtp.sample;
 
 import java.util.concurrent.Callable;
 
-public class SleepingCallable<T> implements Callable<T>{
+class SleepingCallable<T> implements Callable<T>{
   private final long sleepTime;
   private final T string;
 
-  public SleepingCallable(long sleepTime, T string) {
+  SleepingCallable(long sleepTime, T string) {
     this.sleepTime = sleepTime;
     this.string = string;
   }

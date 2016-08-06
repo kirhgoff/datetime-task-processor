@@ -16,18 +16,16 @@ class DelayedCallable<T> implements Delayed, Callable<T> {
   private final Callable<T> delegate;
   private final NowProvider nowProvider;
 
-  public DelayedCallable(LocalDateTime dateTime, Callable<T> delegate, NowProvider nowProvider) {
+  DelayedCallable(LocalDateTime dateTime, Callable<T> delegate, NowProvider nowProvider) {
     this.dateTime = dateTime;
     this.delegate = delegate;
     this.nowProvider = nowProvider;
   }
 
   /**
-   * Delay till Callable start from current moment
+   * Delay until delegate starts
    * @param unit - type of time unit
-   * @return millis till expected start,
-   * could return value below zero
-   * if happened in the past
+   * @return millis till expected start
    */
   @Override
   public long getDelay(TimeUnit unit) {

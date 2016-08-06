@@ -1,7 +1,5 @@
 package org.kirhgoff.dtp.api;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.time.LocalDateTime;
 import java.util.concurrent.Callable;
 
@@ -16,12 +14,13 @@ public interface Processor<T> {
   void start();
 
   /**
-   * Momentarily adds task to be executed in required
+   * Adds task to be executed in required
    * moment of time. Executed as soon as possible, if
-   * resources are short and requested time is already
+   * resources are short or requested time is already
    * in the past
    * @param task - callable to execute, returns object
    * of type T
+   * TODO return future
    */
   void add(LocalDateTime time, Callable<T> task);
 

@@ -4,8 +4,6 @@ import org.kirhgoff.dtp.api.Processor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.concurrent.*;
 
 public class ProcessorImpl<T> implements Processor<T> {
@@ -14,7 +12,7 @@ public class ProcessorImpl<T> implements Processor<T> {
 
   private final ScheduledExecutorService executor;
   private final DelayQueue<DelayedCallable<T>> jobs = new DelayQueue<>();
-  private final Semaphore semaphore;
+  private final Semaphore semaphore; //Not needed actually
   private Thread pollingThread;
 
   private final int poolSize;
